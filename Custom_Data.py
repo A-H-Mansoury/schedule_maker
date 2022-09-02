@@ -1,4 +1,4 @@
-class container:
+class custom_data:
   
   WEEKDAYS = ['شنبه', 'يك شنبه', 'دوشنبه', 'سه شنبه', 'چهارشنبه', 'پنج شنبه']
 
