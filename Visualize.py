@@ -6,14 +6,11 @@ from os.path import isdir
 
 from arabic_reshaper import reshape
 from bidi.algorithm import get_display
+from tqdm.auto import tqdm
 
 from Custom_Data import custom_data
 
 class visualize:
-
-    font_1 = ImageFont.truetype('./data/Vazir.ttf', 17, encoding='unic')
-    font_2 = ImageFont.truetype('./data/Vazir.ttf', 28, encoding='unic')
-    font_3 = ImageFont.truetype('./data/Vazir.ttf', 25, encoding='unic')
     text_color = '#4c5760'
     border_color = '#4c5760'
     box_colors = ['#003d5b', '#30638e', '#00798c', '#d1495b', '#edae49']
@@ -21,6 +18,7 @@ class visualize:
     background_color = '#e7ecef'
 
     def __init__(self, name, data, process_results):
+        bar = tqdm(total=100, desc='Visualize')
         self.name = name
         self.background_color_rgb = ImageColor.getcolor(self.background_color, "RGB")
 
@@ -37,8 +35,22 @@ class visualize:
         self.data = data
         self.process_results = process_results
 
+        self.temp_image = Image.new('RGB', (1500, 700))
+        self.temp_draw = ImageDraw.Draw(self.temp_image)
+
+        bar.update(2)
         self.__create_schedules()
+        bar.update(49)
         self.__create_chart_of_classes_of_each_day()
+        bar.update(49)
+
+    def __get_font(self, font_size=17):
+        return ImageFont.truetype('./data/Vazir.ttf', font_size)
+
+    def __get_text_size(self, text, font):
+        reshaped_text = reshape(text)
+        bidi_text = get_display(reshaped_text)
+        return self.temp_draw.textsize(bidi_text, font)
 
     def __box_color(self, x):
         x = int(x.replace('_', ''))
@@ -48,7 +60,7 @@ class visualize:
     def __put_persian_text(self, text , pos, color, font = None):
 
         if font == None:
-            font = self.font_1
+            font = self.__get_font(17)
 
         reshaped_text = reshape(text)
         bidi_text = get_display(reshaped_text)
@@ -74,6 +86,7 @@ class visualize:
                 if self.image.getpixel((i, y)) != self.background_color_rgb:
                     return False
             return True
+
         if day_index == None:
             for day_index in range(10):
                 if color_check(day_index):
@@ -86,22 +99,25 @@ class visualize:
             fill = self.__box_color(course_id), 
             width = 2
         )
+        for i, text in enumerate([course_name, professor_name, course_id]):
+            text = text.strip()
 
-        self.__put_persian_text(
-            course_name,
-            (x+w//10,y), 
-            color = self.box_text_color
-        )
-        self.__put_persian_text(
-            professor_name,
-            (x+w//10,y+h//3), 
-            color = self.box_text_color
-        )
-        self.__put_persian_text(
-            course_id,
-            (x+w//10,y+h//3*2), 
-            color = self.box_text_color
-        )
+            font_size = 17
+            t_w, t_h = self.__get_text_size(text, self.__get_font(font_size))
+            
+            while w-t_w < -5:
+                font_size -= 1
+                font = self.__get_font(font_size)
+                t_w, t_h = self.__get_text_size(text, font)
+
+            font = self.__get_font(font_size)
+            
+            self.__put_persian_text(
+                text,
+                (round(x+w/2-t_w/2),round(y+h*i/3)), 
+                self.box_text_color,
+                font
+            )
     
     def __create_schedules(self):
 
@@ -114,13 +130,13 @@ class visualize:
                     (50+123*j,0), 
                     f"{j+7}:00", 
                     self.text_color, 
-                    font = self.font_2
+                    font = self.__get_font(28)
                 ) 
                 self.draw.text(
                     (50+123*j,25), 
                     f"{j+8}:00", 
                     self.text_color, 
-                    font = self.font_2
+                    font = self.__get_font(28)
                 ) 
                 self.draw.line(
                     [(145+123*j,0), (145+123*j,60)], 
@@ -169,7 +185,7 @@ class visualize:
                         custom_data.WEEKDAYS[j],
                         (20,75+70*j), 
                         self.text_color, 
-                        self.font_2
+                        self.__get_font(28)
                     )
                     self.draw.line(
                         [(0,130+70*j), (1500,130+70*j)], 
@@ -181,7 +197,7 @@ class visualize:
                     'By A-H-Mansoury Summner 2022',
                     (1100, 650), 
                     self.text_color, 
-                    self.font_3
+                    self.__get_font(25)
                 )
 
                 self.image.save(f"{self.pps}/schedule_{i}.jpg")
@@ -222,7 +238,7 @@ class visualize:
                 custom_data.WEEKDAYS[i],
                 (20,12), 
                 self.text_color, 
-                self.font_2
+                self.__get_font(28)
             )
 
             for j in range(1,11):
@@ -230,13 +246,13 @@ class visualize:
                     (50+123*j,0), 
                     f"{j+7}:00", 
                     self.text_color, 
-                    font = self.font_2
+                    font = self.__get_font(28)
                 ) 
                 self.draw.text(
                     (50+123*j,25), 
                     f"{j+8}:00", 
                     self.text_color, 
-                    font = self.font_2
+                    font = self.__get_font(28)
                 ) 
                 self.draw.line(
                     [(145+123*j,0), (145+123*j,60)], 
@@ -261,7 +277,7 @@ class visualize:
                     '%s %d' % ('کلاس', j),
                     (20,75+70*j), 
                     self.text_color, 
-                    self.font_2
+                    self.__get_font(28)
                 )
                 self.draw.line(
                     [(0,130+70*j), (1500,130+70*j)], 
@@ -273,6 +289,6 @@ class visualize:
                 'By A-H-Mansoury Summner 2022',
                 (1100, 650), 
                 self.text_color, 
-                self.font_3
+                self.__get_font(25)
             )
             self.image.save(f"{self.pedc}/{custom_data.WEEKDAYS[i]}.jpg")

@@ -3,6 +3,7 @@ import re
 from unidecode import unidecode
 
 from pandas import read_html
+from tqdm.auto import tqdm
 
 from Custom_Data import custom_data
 
@@ -21,7 +22,11 @@ class process:
         #'^%s\(.\): (.*) (\d{2}:\d{2})-(\d{2}:\d{2}) %s$' % ('درس', 'هفته زوج'),
     ]
     def __init__(self, targets, golestan_html_path):
+    
+        bar = tqdm(total=100, desc='Process')
+
         self.__read_data(golestan_html_path)
+        bar.update(2)
         targets = list(map(unidecode,  targets))
         for target in targets:
             if len(target) == 7:
@@ -30,10 +35,13 @@ class process:
                 self.target.append(target)
             else:
                 raise Exception('input targets are invalid! They must be either 10 or 7 character long. %s' % target)
-
+        bar.update(2)
         self.__reduce_data_to_targets()
+        bar.update(2)
         self.__extract_course_timestamps()
+        bar.update(30)
         self.__find_compatible_courses()
+        bar.update(64)
 
     def get_results(self):
         return self.results
