@@ -1,6 +1,6 @@
-from PIL import ImageFont, Image, ImageDraw
+from PIL import ImageFont, Image, ImageDraw, ImageColor
 from random import seed, choice
-from os import mkdir
+from os import makedirs
 from shutil import rmtree
 from os.path import isdir
 
@@ -22,20 +22,26 @@ class visualize:
 
     def __init__(self, name, data, process_results):
         self.name = name
-        dir = f'./results_{name}'
+        self.background_color_rgb = ImageColor.getcolor(self.background_color, "RGB")
 
-        if isdir(dir):
-            rmtree(dir)
+        path = f'./results_{name}'
+        if isdir(path):
+            rmtree(path)
+
+        self.pps = path+'/possible_schedules'
+        self.pedc = path+'/classes_of_each_day'
         
-        mkdir(dir)
+        makedirs(self.pps)
+        makedirs(self.pedc)
 
         self.data = data
         self.process_results = process_results
 
         self.__create_schedules()
+        self.__create_chart_of_classes_of_each_day()
 
     def __box_color(self, x):
-        x = int(x[:-3])
+        x = int(x.replace('_', ''))
         seed(x)
         return choice(self.box_colors)
 
@@ -48,12 +54,12 @@ class visualize:
         bidi_text = get_display(reshaped_text)
         self.draw.text(pos, bidi_text, color, font = font) 
 
-    def __put_course(self, start_time, end_time, day_index, course_name, professor_name, course_id):
+    def __put_course(self, start_time, end_time, course_name, professor_name, course_id, day_index = None):
 
         start_time = [int(i) for i in start_time.split(':')]
         end_time = [int(i) for i in end_time.split(':')]
 
-        y = 60+70*day_index 
+        
         w = int(123*(end_time[0]-start_time[0] + (end_time[1]-start_time[1])/60))
         h = 70
         
@@ -61,7 +67,20 @@ class visualize:
             x = 145+123*(start_time[0]-8)+60
         else:
             x = 145+123*(start_time[0]-8)
-        
+
+        def color_check(day_index):
+            y = 60+70*day_index+h/2
+            for i in range(x+10, x+w-10, 50):
+                if self.image.getpixel((i, y)) != self.background_color_rgb:
+                    return False
+            return True
+        if day_index == None:
+            for day_index in range(10):
+                if color_check(day_index):
+                    break
+
+        y = 60+70*day_index
+
         self.draw.rectangle(
             [(x,y), (x+w,y+h)], 
             fill = self.__box_color(course_id), 
@@ -117,21 +136,20 @@ class visualize:
                 data = data.values.tolist()
 
                 for times, course_name, professor_name in data: 
+                    professor_name = professor_name.replace('<BR>', ' ')
 
                     for time in times:
 
                         if time.type > 1:
                             continue
 
-                        professor_name = professor_name.replace('<BR>', ' ')
-
                         self.__put_course(
                             time.start_time, 
-                            time.end_time, 
-                            time.day, 
+                            time.end_time,  
                             course_name, 
                             professor_name, 
-                            course_id
+                            course_id,
+                            time.day
                         )
 
                 self.draw.line(
@@ -166,5 +184,95 @@ class visualize:
                     self.font_3
                 )
 
-                self.image.save(f"./results_{self.name}/schedule_{i}.jpg")
+                self.image.save(f"{self.pps}/schedule_{i}.jpg")
+    
+
+
+    def __create_chart_of_classes_of_each_day(self):
+    
+        for i in range(len(custom_data.WEEKDAYS)):
+            setattr(self, 'image_%d'%i , Image.new('RGB', (1500, 700), self.background_color))
+            image_i = getattr(self, 'image_%d'%i)
+            setattr(self, 'draw_%d'%i , ImageDraw.Draw(image_i))
+            
+        lst = self.data[['container','نام درس', 'نام استاد', 'شماره و گروه درس']].values.tolist()
+        for times, course_name, professor_name, course_id in lst:
+            professor_name = professor_name.replace('<BR>', ' ')
+            for time in times:
+
+                if time.type > 1:
+                    continue
+                
+                self.draw = getattr(self, 'draw_%d' % time.day)
+                self.image = getattr(self, 'image_%d' % time.day)
+                
+                self.__put_course(
+                    time.start_time, 
+                    time.end_time, 
+                    course_name, 
+                    professor_name, 
+                    course_id
+                )
+
+        for i in range(len(custom_data.WEEKDAYS)):    
+            self.image = getattr(self, 'image_%d'%i)
+            self.draw = getattr(self, 'draw_%d'%i)
+
+            self.__put_persian_text(
+                custom_data.WEEKDAYS[i],
+                (20,12), 
+                self.text_color, 
+                self.font_2
+            )
+
+            for j in range(1,11):
+                self.draw.text(
+                    (50+123*j,0), 
+                    f"{j+7}:00", 
+                    self.text_color, 
+                    font = self.font_2
+                ) 
+                self.draw.text(
+                    (50+123*j,25), 
+                    f"{j+8}:00", 
+                    self.text_color, 
+                    font = self.font_2
+                ) 
+                self.draw.line(
+                    [(145+123*j,0), (145+123*j,60)], 
+                    fill = self.border_color, 
+                    width = 2
+                )
         
+            self.draw.line(
+                [(0,60), (1500,60)], 
+                fill = self.border_color, 
+                width = 3
+            )
+
+            self.draw.line(
+                [(145,0), (145,700)], 
+                fill = self.border_color, 
+                width = 3
+            )
+
+            for j in range(10):
+                self.__put_persian_text(
+                    '%s %d' % ('کلاس', j),
+                    (20,75+70*j), 
+                    self.text_color, 
+                    self.font_2
+                )
+                self.draw.line(
+                    [(0,130+70*j), (1500,130+70*j)], 
+                    fill = self.border_color, 
+                    width = 3
+                )
+
+            self.__put_persian_text(
+                'By A-H-Mansoury Summner 2022',
+                (1100, 650), 
+                self.text_color, 
+                self.font_3
+            )
+            self.image.save(f"{self.pedc}/{custom_data.WEEKDAYS[i]}.jpg")

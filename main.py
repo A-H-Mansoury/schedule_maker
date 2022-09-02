@@ -1,7 +1,17 @@
 from Process import process
 from Visualize import visualize
-targets = ['۱۷۱۲۳۱۵', '۱۷۱۲۳۰۱']
-name = 'mamad'
+#targets = ['۱۷۱۲۳۱۵', '۱۷۱۲۳۰۱']
+targets = [
+    '۱۷۱۲۳۱۵',#
+    '۱۷۱۲۳۰۱',
+    '۱۷۱۴۳۰۳',#
+    '۱۷۱۴۳۹۶',#
+    '۱۷۱۶۳۱۰',#
+    '۱۷۱۸۳۰۳',#
+    '۱۷۳۲۲۰۴',
+    '۱۷۳۲۳۰۳'#
+]
+name = '1'
 golestan_html_path = './data/src.html'
 
 if __name__ == '__main__':
