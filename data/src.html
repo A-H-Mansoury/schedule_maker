@@ -1,0 +1,485 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+	<HEAD>
+		<TITLE></TITLE>
+		<META http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<META content="http://schemas.microsoft.com/intellisense/ie5" name="vs_targetSchema">
+		<SCRIPT src="/_scripts/jq.js" type="text/javascript"></SCRIPT>
+		<SCRIPT src="/_scripts/jqui.js" type="text/javascript"></SCRIPT>
+	    <link rel="Stylesheet" type="text/css" href="/_styles/npui.css" />
+		<SCRIPT language="javascript" src="/_Scripts/help.js"></SCRIPT>
+		<SCRIPT language="javascript" src="/_Scripts/report.js"></SCRIPT>
+		<SCRIPT language="javascript" src="/_Scripts/setting.js"></SCRIPT>
+		<LINK href="/_styles/Forms.css" type="text/css" rel="stylesheet">
+		<SCRIPT id="clientEventHandlersJS" language="javascript">
+<!--
+var $=$ ? $ : top.$;
+
+/*
+try{ 
+   if(document.cookie.indexOf("SelJs=4") != -1){
+      var script = document.createElement('script');
+      script.type = 'text/javascript';
+      script.src = '/_Scripts/report_Html5.js'; 
+      document.getElementsByTagName('head')[0].appendChild(script);  
+   }   
+}catch(e){
+   
+}
+*/
+
+try{
+    if(top.opener&&top.opener.SupportOldGolestan){//true
+        var ttop=top.opener;
+        //top.SupportOldGolestan      =ttop.SupportOldGolestan;
+        //top.$                       =ttop.$;
+        top.LengthOfStudentNo       =ttop.LengthOfStudentNo;
+        top.tck_sign                =ttop.tck_sign;
+        top.FaciObj                 =ttop.FaciObj;
+        top.SetTimeFromOldGolestan  =ttop.SetTimeFromOldGolestan;
+        //top.t                       =ttop.t;
+        top.BrowseNewTab            =true;
+        top.NF_modalCheck           =top.NF_modalCheck ? top.NF_modalCheck : ttop.NF_modalCheck;
+    }
+}catch(e){}
+var winH,z=1;
+function GetContInd(){
+   var ContInd=parent.ContInd;
+   if(!ContInd){
+      arr=window.parent.Data.location.search.split('&')
+      for(var i=0;i<arr.length;i++){
+         var arri=arr[i].split('=');
+         if(arri[0]=='TabId'){
+            ContInd=arri[1];
+         }
+      }
+      parent.ContInd=ContInd;
+   }
+   return ContInd;
+}
+function ReturnMenu(){
+  //  console.log("asaddsa");
+	//if(savechg(true)<0)return;
+	parent.Message.HideMsg();
+    if(top.SupportOldGolestan||(top.BrowseNewTab && !top.NF_modalCheck)){//also for top.$iswinopen this code is true to close dialog in new system
+      top.FaciObj.ReturnOpener(GetContInd());
+      return;
+    }
+    if(top.BrowseNewTab && top.NF_modalCheck > 0)
+      top.NF_modalCheck-=1;
+	if(top.$iswinopen){
+		var au=top.$openedwinAut[top.$openedwinAut.length-1];
+
+		top.ex(au.ltck, au.tck, au.u, au.seq, au.ft, au.f, au.sess);
+		top.$openedwin.hide();
+		top.npnfclosewin(window.parent.Master.Form_Body.paramforopener);
+	
+		return;
+	}
+	
+	var t=parent.parent.t;
+	var f=t.FaciArr[parent.ContInd] ? t.FaciArr[parent.ContInd] : t.FaciArr[t.FaciArr.length-1];
+	var a=f.auth;
+	if(t.FaciArr.length>1){
+	    var o=f.Opener;
+	    o=o?o:t.FaciArr[0];
+		t.Activate(o);
+	    t.Close(f);
+	}
+	else{
+	    setTimeout('go(0,11130,true);',10);
+	}
+}
+
+
+function LogOff(){
+	parent.parent.closeall();
+}
+function exitUser(){
+	if(!confirm('لطفا درخواست خروج از سيستم را تاييد نماييد'))return;
+	window.parent.Data.DataModi.Fm_Action.value="97";
+	disableBtn();
+	setTimeout("window.parent.Data.DataModi.submit();",2);
+}
+function ReturnFilter(){
+	//window.parent.document.body.rows=parent.pagetitle.FramesHeight;//'0,80,*,30,30'; 
+	disableBtn();	
+	window.parent.Commander.location.href='/_Templates/Commander.htm';
+
+	window.parent.Master.document.body.rows='40,0,*,0';
+	window.parent.Master.Form_Body.FormShowBtn();
+	
+	//window.parent.Master.navigate('F0202_02_PROCESS_REP_FILTER_Mai.htm');
+	window.parent.Message.WebBusy=false;
+}
+function disableBtn(){
+    //if(window.ActiveXObject){
+	   IM91_gofilter.disable_Butt();
+	   IM90_gomenu.disable_Butt();
+	/*}
+	else
+	{
+	   $(IM91_gofilter).disable_Butt();
+	   $(IM90_gomenu).disable_Butt();	
+	}*/
+}
+function window_onload() {
+	try{
+		FilterPrint.enable_Butt();
+		var b=window.parent.Master.Header.Form_Body;
+		if(!window.ActiveXObject)
+		    b=b.contentDocument.all;
+		if(window.parent.Data.noBre=='0')
+		{
+			//Form_Body
+			b.Isort.onclick='';
+			b.Isort.onmouseover='';
+			b.Isort.onmouseout='';
+			b.Ibreak.onclick='';
+			b.Ibreak.onmouseover='';
+			b.Ibreak.onmouseout='';
+			
+		}
+		else if(window.parent.Data.noBre=='2')
+		{
+			b.Ibreak.onclick='';
+			b.Ibreak.onmouseover='';
+			b.Ibreak.onmouseout='';
+		}
+		if(window.parent.Data.erShow=='1'){
+			IM_NotRep.style.visibility="";
+		}
+		else{
+			IM_NotRep.style.visibility='hidden';
+		}
+		if(window.parent.Data.exp=='1'){
+			ExToEx.style.visibility="";
+		}
+		else{
+			ExToEx.style.visibility='hidden';
+		}
+      if(window.parent.Data.FromArc===1){
+         ExToEx.style.visibility='hidden';
+         IM_NotRep.style.visibility='hidden';
+         IM_Refresh.style.visibility='hidden';
+         FilterPrint.style.visibility='hidden';
+         IM91_gofilter.style.visibility='hidden';
+         Itoolbar.style.visibility='hidden';
+      }
+	}
+	catch(e){setTimeout('window_onload()',100);}
+}
+function showFilterRep(){
+	
+//	alert(window.parent.Master.Form_Body.SendXmlPriVar.xml);
+//	alert(window.parent.Master.Form_Body.SendXmlPubVar.xml);
+	//setTimeout("winH = window.open('FORM_FOR_PRINT_FILTER.htm','');",100);
+	//alert(winH);
+	winH.TitleFilter.innerText=window.parent.Master.Form_Title.titleTD.innerText;
+	winH.sTitle.innerText=window.parent.Master.Form_Body.sTitle.innerText;
+	winH.gTitle.innerText=window.parent.Master.Form_Body.gTitle.innerText;
+	if(window.ActiveXObject){
+		winH.XmlVarPri=window.parent.Master.Form_Body.SendXmlPriFilter.xml;
+		winH.XmlVarPub=window.parent.Master.Form_Body.SendXmlPubFilter.xml;
+	}
+	else
+	{
+		winH.XmlVarPri=new XMLSerializer().serializeToString(window.parent.Master.Form_Body.SendXmlPriFilter.ownerDocument);
+		winH.XmlVarPub=new XMLSerializer().serializeToString(window.parent.Master.Form_Body.SendXmlPubFilter.ownerDocument);
+		
+	}
+}
+function Refresh(){
+	if(parent.Message.ShowPleaseWait()<0) return -1;
+	var a;
+	if(!top.SupportOldGolestan){
+     a=parent.ContObj.auth;
+	}
+	else{
+	   a=top.FaciObj.FaciArr[GetContInd()].auth
+	}
+	RetAut(a);
+	window.parent.Master.Form_Body.SendXmlForSP(1);
+}
+var w;
+function CallForShowErr(){
+	if(parent.Message.ShowPleaseWait()<0) return -1;
+	var a;
+	if(top.$iswinopen){
+		a=top.$openedwinAut[top.$openedwinAut.length-1];
+    }
+    else{
+    	a=parent.ContObj.auth;
+    }
+
+	RetAut(a);
+	window.parent.Data.DataModi.ShowError.value="1";
+	window.parent.Master.Form_Body.SendXmlForSP(1);	
+	w=window.open('',null,'height=300px, width=400px,menubar=yes,status=yes,toolbar=no,resizable =yes,location =no,titlebar =no,scrollbars =yes');
+}
+function ShowErr(){
+    if(window.ActiveXObject){
+	var XMLDat = new ActiveXObject("Msxml2.DOMDocument");
+	XMLDat.async = false;
+	XMLDat.loadXML(parent.Data.xmlDat);
+	var XSLT = new ActiveXObject("Msxml2.XSLTemplate");
+	var XSLDoc = new ActiveXObject("Msxml2.FreeThreadedDOMDocument");
+	XSLDoc.async = false;
+	XSLDoc.load('ShowErr.XSLT');
+	XSLT.stylesheet = XSLDoc;
+	var xslProc = XSLT.createProcessor();
+	xslProc.input = XMLDat;
+	xslProc.transform();
+	w.document.write(xslProc.output);
+	}
+	else
+	{
+	var XSLDoc = new XMLHttpRequest();
+              XSLDoc.open("GET", 'ShowErr.XSLT', true);
+              XSLDoc.send("");
+              var XMLDat;
+			            var XSLT;
+			            var xslTemplate;
+			            var xslProcessor;
+			            var xslFragment;
+			            XMLDat = new DOMParser().parseFromString(parent.Data.xmlDat, "text/xml");
+			            XSLDoc.onreadystatechange=function(){
+                         if(XSLDoc.readyState==4){
+                         XSLT = new DOMParser().parseFromString(XSLDoc.response, "text/xml");
+			            
+			            xslProcessor = new XSLTProcessor();
+			            xslProcessor.importStylesheet(XSLT);
+			            xslFragment = xslProcessor.transformToFragment(XMLDat, document);
+			            var outputErr=document.createElement('DIV');
+                        outputErr.appendChild(xslFragment);
+			            w.document.write(outputErr.innerHTML);
+                         
+                         
+                         }
+                        }                
+    			            
+			            
+	}
+}
+
+function disabledBtn(){}
+function enabledBtn(){}
+function ClearContent(){}
+
+function Get_Data()	{
+}
+function SetOpenerTck(tck){
+   if(top.SupportOldGolestan){
+      top.FaciObj.SetOpenerTck(tck,GetContInd());
+      return;
+   }
+	if(top.$iswinopen){
+		var ifr=top.document.frames(top.npnfwinopenerid()),d=ifr.Data.DataModi;
+		d.TicketTextBox.value=tck;
+		try{
+			top.t.FaciArr[ifr.ContInd].auth.tck   = tck  ;
+		}
+		catch(e){}
+		return;
+	}
+	var f=parent.parent.t.FaciArr[parent.ContInd];
+	var op=f.Opener;
+	if(op){
+		var d=op.doc.frames[op.f.id].Data.DataModi;
+		d.TicketTextBox.value=tck;
+    	op.auth.tck   = tck  ;
+	}
+}
+function trim(s){
+	try{
+		return s.replace(/^\s+|\s+$/g,"");
+	}catch(e){return ''};
+}
+function TabReady(tf){
+   if(top.SupportOldGolestan)return;
+	var f=parent.parent.t.FaciArr[parent.ContInd] ? parent.parent.t.FaciArr[parent.ContInd] : parent.parent.t.FaciArr[parent.parent.t.FaciArr.length-1];
+	var tab=f.par;
+	tab.ready++;
+	if(tab.ready>0)tab.ready=0;
+}
+function SetTime (y,m,d,wd,ho,mi){
+   if(top.SupportOldGolestan)return;
+	if(y<1388)return;
+	if(!parent.ContObj){
+		setTimeout('SetTime('+y+','+m+','+d+','+wd+','+ho+','+mi+')',100);
+		return;
+	}
+	parent.ContObj.par.maintitle.tim.SetTime(y,m,d,wd,ho,mi);
+}
+function SetBrNam(h3){
+   if(top.SupportOldGolestan){
+      $("html",parent.Master.document).attr("dir","rtl");
+      top.FaciObj.SetBrNam(parent.ContInd,h3);
+      //TODO:
+      return;
+   }
+	if(top.$iswinopen)return;
+	var f=parent.parent.t.FaciArr[parent.ContInd] ? parent.parent.t.FaciArr[parent.ContInd] : parent.parent.t.FaciArr[parent.parent.t.FaciArr.length-1];  
+	var butt=f.butt;
+	butt.SetBrNam(h3);
+	butt.par.maintitle.SetGTit(null,null,h3);
+}
+function mex(){
+    try{
+        if($('input#ex',parent.Data.DataModi).length==0)
+            $(parent.Data.DataModi).append('<input type="text" name="ex" id="ex">');
+        
+    }
+    catch(e){
+        alert(e.message);
+    }
+}
+function SavAut(u,su,ft,fid,ltck,tck,seq,nam,cchg,ut,actsign){
+   var cook=document.cookie.split(";");
+   var sess='';
+   for (var i=0;i<cook.length;i++){
+      var n=cook[i].split("=");
+      //if(trim(n[0])=='ASP.NET_SessionId'){ sess  = trim(n[1]) ;}
+   }
+   if(top.SupportOldGolestan){
+      //TODO:
+      var arr,ContInd=GetContInd();
+      top.FaciObj.SetAut(ContInd,{
+         u:u,
+         su:su,
+         ft:ft,
+         f:fid,
+         ltck: ltck,
+         lt: ltck,
+         tck:tck,
+         seq:seq,
+         sess:'',
+         //sid:'',
+         actsign:actsign,
+         ut:ut
+      })
+      top.FaciObj.SetNam(ContInd,nam,cchg,ut);           
+      return;
+   }
+    if(ltck=='' || tck=='')return;
+    if(top.$iswinopen){
+    	top.$openedwinAut[top.$openedwinAut.length-1]={
+    		u:u,
+    		su:su,
+    		ft:ft,
+    		f:fid,
+    		ltck: ltck,
+    		tck:tck,
+			seq:seq,
+			sess:''
+    	};
+    	return;
+    }
+	var tab=parent.parent.t;
+	var fac=tab.FaciArr[parent.ContInd] ? tab.FaciArr[parent.ContInd] :  fac=tab.FaciArr[tab.FaciArr.length-1];
+	var a=fac.auth;
+	a.SetVal(u,su,ft,fid,ltck,tck,seq,sess,actsign);
+	if(nam){fac.butt.SetNam(nam,cchg,ut);tab.VisButts(true);}
+	if(fac.Clop){
+	    fac.Clop=false;
+		tab.Close(fac.Opener,null,true);
+		fac.Opener = null;
+	}
+}
+function RetAut(a){
+   var d=parent.Data.document;
+   if(top.$iswinopen){
+      var a=top.$openedwinAut[top.$openedwinAut.length-1];      
+      //d.cookie='u='+a.u      +"; path=/";
+      d.cookie='su='+a.su      +"; path=/";
+      d.cookie='ft='+a.ft      +"; path=/";
+      d.cookie='f='+a.f      +"; path=/";
+      //d.cookie='lt='+a.ltck   +"; path=/";
+      d.cookie='seq='+a.seq   +"; path=/";
+      return;
+   }
+   if(top.ver==10){top.t.RetAut();return;}
+   if(!a){
+      
+     // if(!top.SupportOldGolestan && !top.BrowseNewTab){
+         var f=parent.parent.t.FaciArr[parent.ContInd] ? parent.parent.t.FaciArr[parent.ContInd] : parent.parent.t.FaciArr[parent.parent.t.FaciArr.length-1];
+         a=f.auth;
+     /* }
+      else{
+         var ContInd=parent.ContInd;
+         if(!ContInd){
+            alert('ContInd is not found in RetAut');
+            return;
+         }
+         a=top.FaciObj.FaciArr[ContInd].auth;
+      }*/
+   }
+   //d.cookie='u='+a.u      +"; path=/";
+   d.cookie='su='+a.su      +"; path=/";
+   d.cookie='ft='+a.ft      +"; path=/";
+   d.cookie='f='+a.f      +"; path=/";
+   //d.cookie='lt='+a.ltck   +"; path=/";
+   d.cookie='seq='+a.seq   +"; path=/";
+}
+
+function sett(t) {
+    var x = 0,xw=t.clientWidth;
+    while (t.tagName != 'BODY') {
+        x += t.offsetLeft;
+        t = t.offsetParent;
+    }
+    toolbar_onclick(x+xw/2.0);
+}
+
+//-->
+        </SCRIPT>
+	</HEAD>
+	<BODY dir="rtl" bgColor="#dfffe0" language="javascript" topmargin="3" onload="return window_onload()">
+		<TABLE cellSpacing="0" cellPadding="0" border="0" id="commTbl" style="HEIGHT: 25px;CLEAR: none; FLOAT: right">
+		<col width="20" align="center"/>
+		<col width="20" align="center"/>
+		<col width="20" align="center"/>
+		<col width="30" align="center"/>
+		<col width="20" align="center"/>
+		<col width="20" align="center"/>
+		<col width="20" align="center"/>
+		<col width="70" align="center"/>
+		<col width="70" align="center"/>
+		<col width="60" align="center"/>
+		<col width="60" align="center"/>
+		<col width="60" align="center"/>
+		<col width="70" align="center"/>
+		<col width="70" align="center"/>
+		<col width="30" align="center"/>
+		<col width="30" align="center"/>
+			<TR>
+				<TD><INPUT id="MoveFirst" title="ابتداي گزارش" onclick="return MoveFirst_onclick()" tabIndex="8" type="image" src="/_Images/MoveFirst.gif" name="MoveFirst" class="Comm"></TD>
+				<TD><INPUT id="MoveBPrevius" title="شکست قبل" onclick="return MoveBPrevius_onclick()" tabIndex="6" type="image" src="/_Images/MoveBPrevius.gif" name="MoveBPrevius" class="Comm"></TD>
+				<TD><INPUT id="MoveRight" title="صفحه قبل" onclick="return MoveRight_onclick()" tabIndex="5" type="image" src="/_Images/MoveRight.gif" name="MoveRight" class="Comm"></TD>
+				<TD><INPUT id="TextPage" onkeypress="return TextPage_onkeypress()" dir="rtl" title="شماره صفحه" style="BORDER-RIGHT: #0000cc 1px solid; BORDER-TOP: #0000cc 1px solid; FONT-SIZE: 8pt; BORDER-LEFT: #0000cc 1px solid; WIDTH: 30pt; COLOR: #0000cc; BORDER-BOTTOM: #0000cc 1px solid;  HEIGHT: 12pt; BACKGROUND-COLOR: #ffffcc; TEXT-ALIGN: center;" tabIndex="4" type="text" onchange="return TextPage_onchange()" maxlength="4" name="TextPage"></TD>
+				<TD><INPUT id="MoveLeft" title="صفحه بعد" onclick="return MoveLeft_onclick()" tabIndex="3" type="image" src="/_Images/MoveLeft.gif" name="MoveLeft" class="Comm"></TD>
+				<TD><INPUT id="MoveBNext" title="شکست بعد" onclick="return MoveBNext_onclick()" tabIndex="2" type="image" src="/_Images/MoveBNext.gif" name="MoveBNext" class="Comm"></TD>
+				<TD><INPUT id="MoveEnd" title=" انتهاي گزارش " onclick="return MoveEnd_onclick()" tabIndex="1" type="image" src="/_Images/MoveEnd.gif" size="20" name="MoveEnd" class="Comm"></TD>
+				<TD><INPUT id="PreparePrint" title="آماده سازي براي چاپ" onclick="return PreparePrint_onclick()" tabIndex="9" type="image" src="/_Images/Prepare.gif" name="PreparePrint" class="Comm"></TD>
+				
+				<TD><INPUT id="ExToEx" title="نمايش گزارش به شكل يك جدول(قابل انتقال به نرم افزارهاي ديگر مانند EXCEL از طريق COPY-PASTE)" onclick="ToExcel();" tabIndex="10" type="image" src="/_Images/ToGrid.gif" class="Comm" style="visibility:hidden"></TD>
+				<TD><INPUT id="FilterPrint" title="چاپ فيلتر" onclick="winH = window.open('FORM_FOR_PRINT_FILTER.htm?tck=\'7276328-OPLCNSDGWE-2837\'','','fullscreen=no,status=no,width=700,height=400,menubar=yes,toolbar=no,scrollbars=yes,resizable=yes,status=no');" tabIndex="10" type="image" src="/_Images/Print_Filter.gif" disabled name="ّFilterPrint" class="Comm"></TD>
+				<TD><INPUT type="image" class="comm" onclick="Refresh()" id="IM_Refresh" alt="اجراي دوباره گزارش" src="/_Images/RepRefresh.gif"></TD>
+				<TD><INPUT id="IM_NotRep" style="visibility:hidden" type="image" class="comm" onclick="CallForShowErr()" alt="مشاهده دلايل ظاهر نشدن در گزارش" src="/_Images/NotRep.gif"></TD>
+				<TD><INPUT type="image" class="comm" onclick="ReturnFilter()" id="IM91_gofilter" alt="بازگشت به صفحه فيلتر" src="/_Images/GotoFilter.gif" NAME="IM90_gofilter"></TD>
+				<TD><INPUT type="image" class="comm" onclick="sett(this)" id="Itoolbar" src="/_Images/Setting.gif" alt="تنظيم گزارش " NAME="Itoolbar"></TD>
+				<TD><INPUT type="image" src="/_Images/A4L.gif" ID="Tpage" style="visibility:hidden" NAME="Tpage"></TD>
+				<TD><INPUT type="image" id="Zoom_IMG" class="comm" src="/_Images/zoom.gif" onclick="z=(z>2)?.5:z+.5;(window.ActiveXObject)?parent.Master.Header.Form_Body.document.body.style.zoom=z:parent.Master.Header.Form_Body.contentDocument.body.style.zoom=z;" title="بزرگنمايي"></TD>
+			</TR>
+		</TABLE>
+		<div onclick="ReturnMenu()" id="IM90_gomenu" class="c1" by="900" style="position:relative;top:1px;width:50px;CLEAR: none; BACKGROUND-POSITION: 0px -900px; FLOAT: left" title="بازگشت به منوي اصلي" >
+		</div>
+
+        <script language="javascript" type="text/javascript">
+            function loadedCompletely() {
+                return "done";
+            }
+        </script>
+
+	</BODY>
+</HTML>
