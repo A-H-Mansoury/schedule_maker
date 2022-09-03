@@ -20,7 +20,7 @@ class visualize:
         self.name = name
         self.background_color_rgb = ImageColor.getcolor(self.background_color, "RGB")
 
-        path = f'./results_{name}' if not is_drive else f'./drive/MyDrive/results_{name}'
+        path = f'./results_{name}' if not is_drive else f'../drive/MyDrive/results_{name}'
         if isdir(path):
             rmtree(path)
 
