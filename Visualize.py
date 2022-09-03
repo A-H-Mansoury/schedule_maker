@@ -188,8 +188,8 @@ class visualize:
                     )
 
                 self.__put_persian_text(
-                    'By A-H-Mansoury Summner 2022',
-                    (1100, 650), 
+                    'A-H-Mansoury',
+                    (1400, 650), 
                     self.text_color, 
                     self.__get_font(25)
                 )
