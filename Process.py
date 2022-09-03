@@ -3,7 +3,7 @@ import re
 from unidecode import unidecode
 
 from pandas import read_html
-from tqdm.auto import tqdm
+from tqdm.autonotebook import tqdm
 
 from Custom_Data import custom_data
 

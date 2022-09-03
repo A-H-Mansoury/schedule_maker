@@ -4,7 +4,7 @@ from os import makedirs
 from shutil import rmtree
 from os.path import isdir
 
-from tqdm.auto import tqdm
+from tqdm.autonotebook import tqdm
 
 from Custom_Data import custom_data
 
@@ -20,7 +20,7 @@ class visualize:
         self.name = name
         self.background_color_rgb = ImageColor.getcolor(self.background_color, "RGB")
 
-        path = f'./results_{name}' if not is_drive else f'./drive/results_{name}'
+        path = f'./results_{name}' if not is_drive else f'./drive/MyDrive/results_{name}'
         if isdir(path):
             rmtree(path)
 
