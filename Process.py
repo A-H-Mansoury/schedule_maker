@@ -142,5 +142,3 @@ class process:
                 continue        
             if check_combination_time_overlap(comb_i):
                 self.results.append(comb_i)
-
-
