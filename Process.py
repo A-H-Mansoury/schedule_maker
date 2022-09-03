@@ -48,6 +48,13 @@ class process:
     
     def get_data(self):
         return self.data
+    
+    @staticmethod
+    def validate_targets(targets):
+        for target in targets:
+            if not (re.match('^\d{7}$', target) or re.match('^\d{7}_\d{2}$', target)):
+                raise ValueError('target <<%s>> is wrong. please fix it and run again.')
+
 
     def __read_data(self, golestan_html_path):
         try:

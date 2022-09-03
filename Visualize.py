@@ -4,8 +4,6 @@ from os import makedirs
 from shutil import rmtree
 from os.path import isdir
 
-from arabic_reshaper import reshape
-from bidi.algorithm import get_display
 from tqdm.auto import tqdm
 
 from Custom_Data import custom_data
@@ -17,12 +15,12 @@ class visualize:
     box_text_color = '#ffffff'
     background_color = '#e7ecef'
 
-    def __init__(self, name, data, process_results):
+    def __init__(self, name, data, process_results, is_drive):
         bar = tqdm(total=100, desc='Visualize')
         self.name = name
         self.background_color_rgb = ImageColor.getcolor(self.background_color, "RGB")
 
-        path = f'./results_{name}'
+        path = f'./results_{name}' if not is_drive else f'./drive/results_{name}'
         if isdir(path):
             rmtree(path)
 
@@ -48,9 +46,7 @@ class visualize:
         return ImageFont.truetype('./data/Vazir.ttf', font_size)
 
     def __get_text_size(self, text, font):
-        reshaped_text = reshape(text)
-        bidi_text = get_display(reshaped_text)
-        return self.temp_draw.textsize(bidi_text, font)
+        return self.temp_draw.textsize(text, font)
 
     def __box_color(self, x):
         x = int(x.replace('_', ''))
@@ -62,9 +58,7 @@ class visualize:
         if font == None:
             font = self.__get_font(17)
 
-        reshaped_text = reshape(text)
-        bidi_text = get_display(reshaped_text)
-        self.draw.text(pos, bidi_text, color, font = font) 
+        self.draw.text(pos, text, color, font = font) 
 
     def __put_course(self, start_time, end_time, course_name, professor_name, course_id, day_index = None):
 

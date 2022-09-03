@@ -11,15 +11,15 @@ targets = [
     #'۱۷۳۲۲۰۴',
     #'۱۷۳۲۳۰۳'#
 ]
+name = 'temp'
 
-name = '1'
+
 golestan_html_path = './data/src.html'
+is_drive  = False
 
 if __name__ == '__main__':
+    process.validate_targets(targets)
     p = process(targets, golestan_html_path)
     process_results = p.get_results()
     process_data = p.get_data()
-    visualize(name, process_data, process_results)
-
-
-
+    visualize(name, process_data, process_results, is_drive)
