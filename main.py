@@ -9,7 +9,7 @@ def parse_args():
     p.add_argument('-t', '--targets', metavar='targets', type=str, help="a multiline string of course_ids")
     p.add_argument('-n', '--name', metavar='name', type=str, help="a random name")
     
-    p.add_argument('-i', '--is_drive', metavar='is_drive', action=argparse.BooleanOptionalAction , help="whether save results in google drive or not")
+    p.add_argument('-i', '--is_drive', metavar='is_drive', default=False, action="store_true", help="whether save results in google drive or not")
     
     if len(sys.argv) <= 1:
         sys.argv.append('--help')
