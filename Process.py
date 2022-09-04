@@ -32,7 +32,7 @@ class process:
             if len(target) == 7:
                 self.__add_all_groups_of_course_to_targets(target)
             elif len(target) == 10:
-                self.target.append(target)
+                self.targets.append(target)
             else:
                 raise Exception('input targets are invalid! They must be either 10 or 7 character long. %s' % target)
         bar.update(2)
