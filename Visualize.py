@@ -194,10 +194,10 @@ class visualize:
                     )
 
                 self.__put_persian_text(
-                    'By A-H-Mansoury Summner 2022',
-                    (1100, 650), 
+                    'https://github.com/A-H-Mansoury/schedule_maker',
+                    (1020, 650), 
                     self.text_color, 
-                    self.__get_font(25)
+                    self.__get_font(18)
                 )
 
                 self.image.save(f"{self.pps}/schedule_{i}.jpg")
@@ -286,9 +286,9 @@ class visualize:
                 )
 
             self.__put_persian_text(
-                'By A-H-Mansoury Summner 2022',
-                (1100, 650), 
+                'https://github.com/A-H-Mansoury/schedule_maker',
+                (1020, 650), 
                 self.text_color, 
-                self.__get_font(25)
+                self.__get_font(18)
             )
             self.image.save(f"{self.pedc}/{custom_data.WEEKDAYS[i]}.jpg")
