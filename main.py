@@ -6,13 +6,17 @@ targets = [
     #'۱۷۱۲۳۰۱',
     '۱۷۱۴۳۰۳',#
     '۱۷۱۴۳۹۶',#
-    #'۱۷۱۶۳۱۰',#
+    '۱۷۱۶۳۱۰',#
     '۱۷۱۸۳۰۳',#
     #'۱۷۳۲۲۰۴',
-    #'۱۷۳۲۳۰۳'#
+    '۱۷۳۲۳۰۳',#
+    #'۱۳۱۰۴۲۶',#eqtesad
+    #'۱۷۱۲۳۰۱', #az alectronics
+    #'۱۷۳۲۲۰۴',#az digital
+    #'۲۵۱۰۳۱۷'#zaban takhasosi
 ]
 
-name = '1'
+name = 'main'
 golestan_html_path = './data/src.html'
 
 if __name__ == '__main__':
@@ -20,6 +24,7 @@ if __name__ == '__main__':
     process_results = p.get_results()
     process_data = p.get_data()
     visualize(name, process_data, process_results)
+
 
 
 

@@ -3,7 +3,7 @@ import re
 from unidecode import unidecode
 
 from pandas import read_html
-from tqdm.auto import tqdm
+from tqdm.autonotebook import tqdm
 
 from Custom_Data import custom_data
 
@@ -14,8 +14,8 @@ class process:
     regex = [
         '^%s\(.\): (.*) (\d{2}:\d{2})-(\d{2}:\d{2}) %s: (.*)$' % ('درس' , 'مکان'),
         '^%s\(.\): (.*) (\d{2}:\d{2})-(\d{2}:\d{2})$' % 'درس',
-        '^%s\(.\): (.*) (\d{2}:\d{2})-(\d{2}:\d{2}) %s: (.*)$' % ('حل تمرين' , 'مکان'),
-        '^%s\(.\): (.*) (\d{2}:\d{2})-(\d{2}:\d{2})$' % 'حل تمرين',
+        #'^%s\(.\): (.*) (\d{2}:\d{2})-(\d{2}:\d{2}) %s: (.*)$' % ('حل تمرين' , 'مکان'),
+        #'^%s\(.\): (.*) (\d{2}:\d{2})-(\d{2}:\d{2})$' % 'حل تمرين',
         '%s\(\d+_(\d{4}\.\d{2}\.\d{2})\) %s : (\d{2}:\d{2})-(\d{2}:\d{2})' % ('امتحان', 'ساعت'),
         '%s\((\d{4}\.\d{2}\.\d{2})\) %s : (\d{2}:\d{2})-(\d{2}:\d{2})' % ('امتحان عملي', 'ساعت'),
         #'^%s\(.\): (.*) (\d{2}:\d{2})-(\d{2}:\d{2}) %s$' % ('درس', 'هفته فرد'),
@@ -48,6 +48,13 @@ class process:
     
     def get_data(self):
         return self.data
+    
+    @staticmethod
+    def validate_targets(targets):
+        for target in targets:
+            if not (re.match('^\d{7}$', target) or re.match('^\d{7}_\d{2}$', target)):
+                raise ValueError('target <<%s>> is wrong. please fix it and run again.')
+
 
     def __read_data(self, golestan_html_path):
         try:
@@ -99,7 +106,7 @@ class process:
                 indexes = [k for k, val in enumerate(subrecord) if val != None]
 
                 if indexes == []:
-                    print('there is unsupported course in your schedule!')
+                    #print('there is unsupported course in your schedule!')
                     continue
                 else:
                     index = indexes[0]
@@ -135,5 +142,4 @@ class process:
                 continue        
             if check_combination_time_overlap(comb_i):
                 self.results.append(comb_i)
-
-
+            

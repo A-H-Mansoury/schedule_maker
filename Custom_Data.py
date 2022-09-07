@@ -4,12 +4,12 @@ class custom_data:
 
   def __init__(self, type, *args, **kwargs):
     self.type = type
-    getattr(self, '__init_type_%d__'%(type//4))(*args, **kwargs)
+    getattr(self, '__init_type_%d__'%(type//2))(*args, **kwargs)
   
   @staticmethod
   def time_overlap(a, b):
     overlap =  max(0, min(a.end_timestamp, b.end_timestamp) - max(a.start_timestamp, b.start_timestamp))
-    return overlap > 0
+    return overlap  > 0
 
   def __time2timestamp(self, string):
     hour, minute = string.split(':')
