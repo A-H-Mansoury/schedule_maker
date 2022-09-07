@@ -4,7 +4,7 @@ class custom_data:
 
   def __init__(self, type, *args, **kwargs):
     self.type = type
-    getattr(self, '__init_type_%d__'%(type//4))(*args, **kwargs)
+    getattr(self, '__init_type_%d__'%(type//2))(*args, **kwargs)
   
   @staticmethod
   def time_overlap(a, b):
