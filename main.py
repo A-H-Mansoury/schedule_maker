@@ -2,18 +2,12 @@ from Process import process
 from Visualize import visualize
 
 targets = [
-    '۱۷۱۲۳۱۵',#
-    #'۱۷۱۲۳۰۱',
-    '۱۷۱۴۳۰۳',#
-    '۱۷۱۴۳۹۶',#
-    '۱۷۱۶۳۱۰',#
-    '۱۷۱۸۳۰۳',#
-    #'۱۷۳۲۲۰۴',
-    '۱۷۳۲۳۰۳',#
-    #'۱۳۱۰۴۲۶',#eqtesad
-    #'۱۷۱۲۳۰۱', #az alectronics
-    #'۱۷۳۲۲۰۴',#az digital
-    #'۲۵۱۰۳۱۷'#zaban takhasosi
+    '۱۷۱۴۳۰۳_۰۲',
+    '۱۷۱۶۴۲۴_۰۱',
+    '۱۷۱۶۴۳۵_۰۱',
+    '۱۷۱۶۳۱۵_۰۱',
+    '۱۷۳۲۳۰۸_۰۱',
+    '۱۷۱۴۳۰۴_۰۲', 
 ]
 
 name = 'main'
@@ -24,7 +18,3 @@ if __name__ == '__main__':
     process_results = p.get_results()
     process_data = p.get_data()
     visualize(name, process_data, process_results)
-
-
-
-
