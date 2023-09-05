@@ -28,7 +28,7 @@ class process:
         bar = tqdm(total=100, desc='Process')
 
         self.__read_data(golestan_html_path)
-        bar.update(2)
+        
         targets = list(map(unidecode,  targets))
                 
         for target in targets:
@@ -41,13 +41,11 @@ class process:
         
         bar.update(2)
         self.__reduce_data_to_targets()
-
         bar.update(2)
         self.__extract_course_timestamps()
         bar.update(30)
         self.__find_compatible_courses()
         bar.update(64)
-        print(self.results)
 
     def get_results(self):
         return self.results
@@ -129,7 +127,6 @@ class process:
         )
     
     def process_targets(self, comb_i):
-        print(comb_i)
 
         def check_combination_time_overlap(comb):
             for i, j in combinations(comb, 2):
@@ -145,9 +142,6 @@ class process:
             return None        
         if check_combination_time_overlap(comb_i):
             return comb_i
-        else:
-            print(comb_i)
-
 
     def __find_compatible_courses(self):
         self.num_unique =  self.count_individual_courses(self.targets)
