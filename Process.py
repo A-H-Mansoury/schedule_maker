@@ -7,6 +7,8 @@ from tqdm.autonotebook import tqdm
 
 from Custom_Data import custom_data
 
+import concurrent.futures
+
 class process:
 
     targets = []
@@ -28,20 +30,24 @@ class process:
         self.__read_data(golestan_html_path)
         bar.update(2)
         targets = list(map(unidecode,  targets))
+                
         for target in targets:
             if len(target) == 7:
                 self.__add_all_groups_of_course_to_targets(target)
             elif len(target) == 10:
-                self.target.append(target)
+                self.targets.append(target)
             else:
                 raise Exception('input targets are invalid! They must be either 10 or 7 character long. %s' % target)
+        
         bar.update(2)
         self.__reduce_data_to_targets()
+
         bar.update(2)
         self.__extract_course_timestamps()
         bar.update(30)
         self.__find_compatible_courses()
         bar.update(64)
+        print(self.results)
 
     def get_results(self):
         return self.results
@@ -87,7 +93,7 @@ class process:
         for i, record in enumerate(self.data['زمان و مكان ارائه/ امتحان']):
 
             if type(record) != str:
-                print('there isn\'t any datetime information')
+                print('\nthere isn\'t any datetime information')
                 continue
 
             record = record.split('<BR>')
@@ -115,13 +121,15 @@ class process:
                     custom_data(index, *subrecord[index].groups())
                 )
 
+                    
 
-    def __find_compatible_courses(self):
-
-        def count_individual_courses(y):
-            return len(
-                set(x[:-3] if len(x) == 10 else x for x in y)
-            )
+    def count_individual_courses(self, y):
+        return len(
+            set(x[:-3] if len(x) == 10 else x for x in y)
+        )
+    
+    def process_targets(self, comb_i):
+        print(comb_i)
 
         def check_combination_time_overlap(comb):
             for i, j in combinations(comb, 2):
@@ -132,14 +140,19 @@ class process:
                     if custom_data.time_overlap(k, h):
                         return False
             return True
-                    
+        
+        if self.count_individual_courses(comb_i) != self.num_unique:
+            return None        
+        if check_combination_time_overlap(comb_i):
+            return comb_i
+        else:
+            print(comb_i)
 
 
-        num = count_individual_courses(self.targets)
-        for comb_i in combinations(self.targets, num):  
+    def __find_compatible_courses(self):
+        self.num_unique =  self.count_individual_courses(self.targets)
 
-            if count_individual_courses(comb_i) != num:
-                continue        
-            if check_combination_time_overlap(comb_i):
-                self.results.append(comb_i)
-            
+        with concurrent.futures.ProcessPoolExecutor(8) as exe:
+            for _ in exe.map(self.process_targets, combinations(self.targets, self.num_unique)):
+                if _ != None:
+                    self.results.append(_)
